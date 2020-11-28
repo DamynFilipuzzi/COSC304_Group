@@ -16,14 +16,10 @@
 // Get product name to search for
 // TODO: Retrieve and display info for the product
 int productId = Integer.parseInt(request.getParameter("id"));
-
 String sql = "SELECT productName, productPrice, productImageURL FROM product where productId=?";
-
-
 String url = "jdbc:sqlserver://db:1433;DatabaseName=tempdb;";
 String uid = "SA";
 String pw = "YourStrong@Passw0rd";	
-
 try
 {	// Load driver class
 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
@@ -32,7 +28,6 @@ catch (java.lang.ClassNotFoundException e)
 {
 	out.println("ClassNotFoundException: " +e);
 }
-
 try 
 {
     getConnection();
@@ -43,13 +38,11 @@ try
         out.println("<h1>Invalid product ID</h1>");
     else{
         String productName = rst.getString(1);
-        int productPrice = rst.getInt(2);
+        Double productPrice = rst.getDouble(2);
         String productImage = rst.getString(3);
-
         out.println("<h1>" + productName + "</h1>");
         
         // TODO: If there is a productImageURL, display using IMG tag
-
         if(productImage != null)
             out.println(String.format("<img src=displayImage.jsp?id=%s alt='image of product'>", productId)); 
             
@@ -58,19 +51,14 @@ try
         
         // TODO: Add links to Add to Cart and Continue Shopping
         out.println("<h2> <a href=listprod.jsp?productName=''>Continue Shopping</a></h2>");
-        out.println(String.format("<h2> <a href=addcart.jsp?name=%s&id=%s&price=%s>Add to Cart</a></h2>",productName, productId, productPrice));
+        out.println(String.format("<h2> <a href=addcart.jsp?name=%s&id=%d&price=%f>Add to Cart</a></h2>",rst.getString(1).replaceAll("'","%27"), productId, productPrice));
     }
 } catch (SQLException ex) 
 { 	out.println(ex); 
 }
-
-
 		
-
 		
-
 %>
 
 </body>
 </html>
-
