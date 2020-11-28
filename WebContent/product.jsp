@@ -2,6 +2,7 @@
 <%@ page import="java.text.NumberFormat" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF8"%>
 <%@ include file="jdbc.jsp" %>
+<%@ page import="java.util.Locale" %>
 
 <html>
 <head>
@@ -38,8 +39,11 @@ try
         out.println("<h1>Invalid product ID</h1>");
     else{
         String productName = rst.getString(1);
-        Double productPrice = rst.getDouble(2);
         String productImage = rst.getString(3);
+        NumberFormat currFormat = NumberFormat.getCurrencyInstance(Locale.US);
+        String productPrice = (currFormat.format(rst.getDouble(2)));
+        double numPrice = rst.getDouble(2);
+        String link =  String.format("addcart.jsp?id=%s&name=%s&price=%f",productId,rst.getString(1).replaceAll("'","%27"),numPrice);
         out.println("<h1>" + productName + "</h1>");
         
         // TODO: If there is a productImageURL, display using IMG tag
@@ -51,7 +55,9 @@ try
         
         // TODO: Add links to Add to Cart and Continue Shopping
         out.println("<h2> <a href=listprod.jsp?productName=''>Continue Shopping</a></h2>");
-        out.println(String.format("<h2> <a href=addcart.jsp?name=%s&id=%d&price=%f>Add to Cart</a></h2>",rst.getString(1).replaceAll("'","%27"), productId, productPrice));
+        out.println(String.format("<tr><td><a href='%s'>Click to add to cart</a></td><td>",link)+
+            "</td></tr>");
+        
     }
 } catch (SQLException ex) 
 { 	out.println(ex); 
